@@ -30,10 +30,41 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+// Page Navigation
+// document.querySelectorAll('.nav__link').forEach(
+//   function(el){
+//     el.addEventListener('click', function(e){
+//       e.preventDefault();
+//       const id = this.getAttribute('href');
+//       console.log(id);
+//       document.querySelector(id).scrollIntoView({
+//         behavior: 'smooth'
+//       });
+//     });   
+// })
+
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event
+
+document.querySelector('.nav__links').addEventListener('click', function(e){
+  console.log(e.target);
+  e.preventDefault();
+  // Matching Strategy
+  if(e.target.classList.contains('nav__link')){
+      const id = e.target.getAttribute('href');
+      console.log(id);
+      document.querySelector(id).scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+})
+
+
 // Selecting Elements
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
+// console.log(document.documentElement);
+// console.log(document.head);
+// console.log(document.body);
 
 const header = document.querySelector('.header');
 const allSections = document.querySelectorAll('.section');
@@ -41,9 +72,9 @@ console.log(allSections);
 
 document.getElementById('section--1');
 const allButtons = document.getElementsByTagName('button');
-console.log(allButtons);
+// console.log(allButtons);
 
-console.log(document.getElementsByClassName('.btn'));
+// console.log(document.getElementsByClassName('.btn'));
 
 
 // Creating and inserting elements
@@ -83,19 +114,19 @@ message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) +
 
 // Attributes
 const logo = document.querySelector('.nav__logo');
-console.log(logo.src);
-console.log(logo.alt);
-console.log(logo.className);
+// console.log(logo.src);
+// console.log(logo.alt);
+// console.log(logo.className);
 
 logo.alt = 'Beautiful minimalist logo';
 
-console.log(logo.getAttribute('designer'));
+// console.log(logo.getAttribute('designer'));
 logo.setAttribute('company', 'Bankist');
 logo.getAttribute('src')
 
 const link = document.querySelector('.twitter-link');
-console.log(link.href);
-console.log(link.getAttribute('href'));
+// console.log(link.href);
+// console.log(link.getAttribute('href'));
 
 // Data Attribute
 console.log(logo.dataset.versionNumber);
@@ -135,7 +166,7 @@ btnScrollTo.addEventListener('click', function(e){
   
 })
 
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 
 // const alertH1 = function(e){
 //   alert('addEventListener: Great! You are learning bro!');
@@ -158,21 +189,131 @@ const randomColor = () =>
   `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`;
 
 
-document.querySelector('.nav__link').addEventListener('click', function(e){
-  this.style.backgroundColor = randomColor();
-  console.log('LINK', e.target, e.currentTarget);
-  console.log(e.currentTarget === this);
+// document.querySelector('.nav__link').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+  // console.log('LINK', e.target, e.currentTarget);
+  // console.log(e.currentTarget === this);
 
   // Stop propagation
   // e.stopPropagation();
+// })
+
+// document.querySelector('.nav__links').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target, e.currentTarget);
+// })
+
+// document.querySelector('.nav').addEventListener('click', function(e){
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+// }, false) 
+
+const h1 = document.querySelector('h1');
+
+// Going downwards: child
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+// Going upwards: parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+// Going sideways: siblings
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function(el){
+  if(el !== h1) el.style.transform = 'scale(0.5)';
 })
 
-document.querySelector('.nav__links').addEventListener('click', function(e){
-  this.style.backgroundColor = randomColor();
-  console.log('CONTAINER', e.target, e.currentTarget);
+// Tabbed Component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsContainer.addEventListener('click', function(e){
+  const clicked = e.target.closest('.operations__tab');
+  console.log(clicked);
+
+  // Guard Clause
+  if(!clicked) return;
+
+  // Active Tab
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  clicked.classList.add('operations__tab--active');
+
+  // Activate content area
+
+  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
 })
 
-document.querySelector('.nav').addEventListener('click', function(e){
-  this.style.backgroundColor = randomColor();
-  console.log('NAV', e.target, e.currentTarget);
-}, false) 
+// tabs.forEach(t => t.addEventListener('click', () => 
+//   console.log('TAB')
+// ))
+
+// Menu fade animation
+const handleHover = function(e){
+  if(e.target.classList.contains('nav__link')){
+    const link = e.target;
+    const siblings  = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if(el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+// Passing "argument" into handler
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+// nav.addEventListener('mouseover', function(e){
+//   handleHover(e,0.5);
+// });
+
+// nav.addEventListener('mouseout', function(e){
+//   handleHover(e,1);
+// });
+
+
+// const nav = document.querySelector('.nav');
+// nav.addEventListener('mouseover', function(e){
+//   if(e.target.classList.contains('nav__link')){
+//     const link = e.target;
+//     const siblings  = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach(el => {
+//       if(el !== link) el.style.opacity = 0.5;
+//     });
+//     logo.style.opacity = 0.5;
+//   }
+// })
+
+// nav.addEventListener('mouseout', function(e){
+//   if(e.target.classList.contains('nav__link')){
+//     const link = e.target;
+//     const siblings  = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach(el => {
+//       if(el !== link) el.style.opacity = 1;
+//     });
+//     logo.style.opacity = 1;
+//   }
+// })
